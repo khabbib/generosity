@@ -74,4 +74,10 @@ async function createPaymentRequest(amount, message, payerAlias) {
   }
 }
 
-createPaymentRequest(100, 'test request', '0703214221');
+const paymentRequest = await createPaymentRequest(1, 'Test Payment', '46703214221');
+
+const callbackUrl = `https://myfrontend.com/receipt?ref=${paymentRequest.id}`;
+const appUrl = `swish://paymentrequest?token=${paymentRequest.token}&callbackurl=${callback}`;
+
+// Open or redirect the user to the url
+redirect(appUrl);
