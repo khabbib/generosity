@@ -81,3 +81,18 @@ const appUrl = `swish://paymentrequest?token=${paymentRequest.token}&callbackurl
 
 // Open or redirect the user to the url
 redirect(appUrl);
+
+// after it is done we can get the request information for the recept
+async function getPaymentRequest(id) {
+  try {
+    const response = await client.get(
+      `https://mss.cpc.getswish.net/swish-cpcapi/api/v1/paymentrequests/${id}`
+    );
+
+    if (response.status === 200) {
+      return response.data;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
