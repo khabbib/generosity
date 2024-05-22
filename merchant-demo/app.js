@@ -10,9 +10,9 @@ const testConfig = {
 	payeeAlias: "1231181189",
 	host: "https://mss.cpc.getswish.net/swish-cpcapi",
 	qrHost: "https://mpc.getswish.net/qrg-swish",
-	cert: path.resolve(__dirname, 'ssl/Swish_Merchant_TestCertificate_1234679304.pem'),
-	key: path.resolve(__dirname, 'ssl/Swish_Merchant_TestCertificate_1234679304.key'),
-	ca: path.resolve(__dirname, 'ssl/Swish_TLS_RootCA.pem'),
+	cert: path.resolve(__dirname, './ssl/Swish_Merchant_TestCertificate_1234679304.pem'),
+	key: path.resolve(__dirname, './ssl/Swish_Merchant_TestCertificate_1234679304.key'),
+	ca: path.resolve(__dirname, './ssl/Swish_TLS_RootCA.pem'),
 	passphrase: "swish"
 }
 
