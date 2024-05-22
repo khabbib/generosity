@@ -2,3 +2,16 @@ section {
     background-color: #1588fc;
     padding: 20px;
 }
+
+div {
+    margin: 20px;
+}
+
+form {
+    /*background-color: aqua;*/
+}
+
+button {
+    width: 100px;
+    margin-left: 20px;;
+}
