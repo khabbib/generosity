@@ -1,23 +1,18 @@
-<section>
-    <h1>Index</h1>
+<section ng-app="myApp">
+    <h1>Donation</h1>
 
-    <form>
+    <form ng-controller="FormController">
         <div class="form-group">
-          <label for="projectName">Project name</label>
-          <input type="text" class="form-control" id="projectName" placeholder="Enter project name">
+            <label for="projectName">Enter the project name you want to donate to:</label>
+            <input type="text" class="form-control" id="projectName" placeholder="Enter project name" ng-model="projectName">
         </div>
 
-        <br><br>
-
         <div class="form-group">
-          <label for="donationAmount">Donation amount</label>
-          <input type="text" class="form-control" id="donationAmount" placeholder="Donation amount">
+            <label for="donationAmount">Enter the donation amount:</label>
+            <input type="text" class="form-control" id="donationAmount" placeholder="Donation amount" ng-model="donationAmount">
         </div>
 
-        <br><br>
-
-        <button type="submit" class="btn btn-primary">Donate</button>
-      
+        <button type="submit" class="btn btn-primary" 
+        ng-click="submitForm()">Donate</button>
     </form>
-
 </section>

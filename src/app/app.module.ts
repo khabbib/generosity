@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import {CoreModule} from './core/core.module';
 import {DashboardComponent} from './dashboard/dashboard.component';
 import {IndexComponent} from './index/index.component';
+import {ThankyouComponent} from './thankyou/thankyou.component';
 
 import {CommonModule} from '@angular/common';
 
@@ -15,7 +16,8 @@ import {CommonModule} from '@angular/common';
   declarations: [
     AppComponent,
     DashboardComponent,
-    IndexComponent
+    IndexComponent,
+    ThankyouComponent
   ],
   imports: [
     CommonModule,
