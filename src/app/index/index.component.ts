@@ -9,16 +9,17 @@ import { Router } from '@angular/router';
 })
 export class IndexComponent {
 
-  projectName: string = '';
-  donationAmount: string = '';
-  qrCodeUrl: string | null = null;
-
-  localhost: string =  'localhost:3000';
-  baseURL: string = "http://" + this.localhost+ "/";
-status: string = "";
-identifier: string = "";
-originalPaymentReference: string = "";
-refundIdentifier: string = "";
+	projectName: string = '';
+	donationAmount: string = '';
+	qrCodeUrl: string | null = null;
+	
+	localhost: string =  'localhost:3000';
+	baseURL: string = "http://" + this.localhost+ "/";
+	status: string = "";
+	identifier: string = "";
+	originalPaymentReference: string = "";
+	refundIdentifier: string = "";
+	pollingInterval: any;
 
   constructor(private router: Router, private cdr: ChangeDetectorRef) {
     //alert("Note! Index is Donation page.");
@@ -27,6 +28,8 @@ refundIdentifier: string = "";
   // handle form submission logic when donation button is clicked
   submitForm() {
 	this.startQRPayment();
+
+	
 
     // set items to local storage
     localStorage.setItem("project-name", this.projectName);
@@ -53,16 +56,11 @@ refundIdentifier: string = "";
 			return
 		}
 
-		this.postQRPayment(this.updateStatus.bind(this), this.identifier, this.baseURL, this.qrCodeUrl)	
+		this.postQRPayment()	
 		this.updateStatus("Request sent")
 	}
 
-  postQRPayment( 
-    updateStatus : (status: string) => void,
-    identifier: string,
-    baseURL: string,
-    qrCodeUrl: string | null,
-    ) {
+  postQRPayment() {
 
 		const url = this.baseURL + "paymentrequests"
 		fetch(url, {  
@@ -75,18 +73,18 @@ refundIdentifier: string = "";
 				project: this.projectName
 			})
 		})
-		.then(function(response) {
+		.then((response) => {
 			if (response.status != 201) {
-				updateStatus("Request failure: " + response.statusText)
+				this.updateStatus("Request failure: " + response.statusText)
 				return
 			}
 			return response.json();
 		})
 		.then((json) => {
 			if (json) {
-				identifier = json["id"];
+				this.identifier = json["id"];
 				const token = json["token"];
-				const url = baseURL + "qr/" + token
+				const url = this.baseURL + "qr/" + token
 				fetch(url, {  
 					method: 'GET',  
 					headers: {
@@ -98,8 +96,12 @@ refundIdentifier: string = "";
 				})
 				.then((blob) => {
 					var objectURL = URL.createObjectURL(blob);
-					qrCodeUrl = objectURL;
 					this.qrCodeUrl = objectURL;
+					this.pollingInterval = setInterval(() => {
+						if (this.identifier) {
+						  this.getPaymentStatus(this.identifier);
+						}
+					}, 1000);
 					// this.cdr.detectChanges();
 					return blob
 				})
@@ -116,9 +118,6 @@ refundIdentifier: string = "";
 
   getPaymentStatus(
     id: string, 
-    updateStatus: (status: string) => void, 
-    originalPaymentReference: string,
-    identifier: string,
     ) {
 
 		const url = this.baseURL + "paymentrequests/" + id
@@ -129,39 +128,49 @@ refundIdentifier: string = "";
 				'Content-Type': 'application/json'
 			}
 		})
-		.then(function(response) {
+		.then((response) => {
 			return response.json();
 		})
-		.then(function(json) {
+		.then((json) => {
+			this.updateStatus("Payment(identifier: " + this.identifier + ", paymentReference: "+ this.originalPaymentReference + ") " + json.status)
 			if (json.status == "PAID") {
-				originalPaymentReference = json["paymentReference"];
+				this.originalPaymentReference = json["paymentReference"];
+				clearInterval(this.pollingInterval);
+				this.clear();
+				setTimeout(() => {
+						// this.router.navigateByUrl('/thankyou');
+						this.qrCodeUrl = ""
+						this.updateStatus("thanks for donating :)")
+					}, 3000)
 			}
-			updateStatus("Payment(identifier: " + identifier + ", paymentReference: "+ originalPaymentReference + ") " + json.status)
 		})
-		.catch(function (error) {  
+		.catch( (error) => {  
 			console.log("Request failure: ", error);  
+			clearInterval(this.pollingInterval);
 		});
 	}
 
 	clear() {
 		this.identifier = ""
-			this.originalPaymentReference = ""
-			this.refundIdentifier = ""
+		this.originalPaymentReference = ""
+		this.refundIdentifier = ""
+		this.projectName = ""
+		this.donationAmount = ""
 	  }
 	
 	  updateStatus(status: string) {
-				this.status = status
+			this.status = status
 	  }
 	
 	
-		paymentStatusClick() {
-			const id = this.identifier
-			if (!id || id.length <= 0) {
-				this.updateStatus("No payment Id")
-				return
-			}
-			this.getPaymentStatus(id, this.updateStatus.bind(this),  this.originalPaymentReference, this.identifier)
+	paymentStatusClick() {
+		const id = this.identifier
+		if (!id || id.length <= 0) {
+			this.updateStatus("No payment Id")
+			return
 		}
+		this.getPaymentStatus(id)
+	}
 	
 
 }
