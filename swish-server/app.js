@@ -19,7 +19,6 @@ const agent = {
 	passphrase: "swish"
 }
 
-
 // Create Payment Request
 app.post('/paymentrequests',  (req, res) => {
 	const data = {
