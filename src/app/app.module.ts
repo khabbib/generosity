@@ -17,7 +17,7 @@ import {CommonModule} from '@angular/common';
     AppComponent,
     DashboardComponent,
     IndexComponent,
-    ThankyouComponent
+    ThankyouComponent,
   ],
   imports: [
     CommonModule,
