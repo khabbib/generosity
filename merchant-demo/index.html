@@ -79,7 +79,7 @@
 		</div>
 	</div>
 </div>
-
+<div id="result"></div>
 </body>
 
 <script>
@@ -208,6 +208,20 @@
 			if (json) {
 				identifier = json["id"];
 				updateStatus("Payment request created with identifier " + identifier + ", open app.")
+
+				fetch(`${url}/${identifier}`)
+					.then(response => {
+						if (!response.ok) {
+							throw new Error('Network response was not ok ' + response.statusText);
+						}
+						return response.json();
+					})
+					.then(data => {
+						document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+					})
+					.catch(error => {
+						console.error('There was a problem with your fetch operation:', error);
+					});
 			}
 
 		})

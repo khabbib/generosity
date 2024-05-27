@@ -6,13 +6,13 @@ const path = require('path')
 const app = express()
 app.use(express.json())
 
-const testConfig = {	
+const agent = {	
 	payeeAlias: "1231181189",
 	host: "https://mss.cpc.getswish.net/swish-cpcapi",
 	qrHost: "https://mpc.getswish.net/qrg-swish",
-	cert: path.resolve(__dirname, './ssl/Swish_Merchant_TestCertificate_1234679304.pem'),
-	key: path.resolve(__dirname, './ssl/Swish_Merchant_TestCertificate_1234679304.key'),
-	ca: path.resolve(__dirname, './ssl/Swish_TLS_RootCA.pem'),
+	cert: path.resolve(__dirname, './ssl/new_test_certificates/Swish_Merchant_TestCertificate_1234679304.pem'),
+	key: path.resolve(__dirname, './ssl/new_test_certificates/Swish_Merchant_TestCertificate_1234679304.key'),
+	ca: path.resolve(__dirname, './ssl/new_test_certificates/Swish_TLS_RootCA.pem'),
 	passphrase: "swish"
 }
 
@@ -25,7 +25,7 @@ const prodConfig = {
 	passphrase: null
 }
 
-const config = testConfig
+const config = agent
 
 // Demo Web Frontend
 app.get('/', function(req, res) {
@@ -54,8 +54,7 @@ app.post('/paymentrequests', function (req, res) {
 	const options = requestOptions('POST', `${config.host}/api/v1/paymentrequests`, json)
 
 	request(options, (error, response, body) => { 
-
-		logResult(error, response)
+		//logResult(error, response)
 
 		if (!response) {
 			res.status(500).send(error)
@@ -64,7 +63,6 @@ app.post('/paymentrequests', function (req, res) {
 		
 		res.status(response.statusCode)
 		if (response.statusCode == 201) { 
-
 			// Payment request was successfully created. In order to get the details of the
 			// newly created request, we need to make a GET request to the url in the location header
 
@@ -75,7 +73,7 @@ app.post('/paymentrequests', function (req, res) {
 
 			request(opt, (err, resp, bod) => {
 
-				logResult(err, resp)
+				//logResult(err, resp)
 
 				if (!response) {
 					res.status(500).send(error)
@@ -100,7 +98,6 @@ app.post('/paymentrequests', function (req, res) {
 
 // Get Payment Request
 app.get('/paymentrequests/:requestId', function (req, res) {
-
 	const options = requestOptions('GET', `${config.host}/api/v1/paymentrequests/${req.params.requestId}`)
 
 	request(options, (error, response, body) => {
