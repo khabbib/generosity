@@ -1,38 +1,36 @@
-import {Component} from '@angular/core';
+import {Component, ChangeDetectorRef} from '@angular/core';
 import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-index',
   templateUrl: './index.component.html',
-  styleUrls: ['./index.component.css']
+  styleUrls: ['./index.component.css'],
 })
 export class IndexComponent {
 
-  QRelSrc: string = ""; // document.getElementById("QR").src
   projectName: string = '';
   donationAmount: string = '';
   qrCodeUrl: string | null = null;
 
-  baseURL: string = "http://" + window.location.host + "/";
-	status: string = "";
-	identifier: string = "";
-	originalPaymentReference: string = "";
-	refundIdentifier: string = "";
+  localhost: string =  'localhost:3000';
+  baseURL: string = "http://" + this.localhost+ "/";
+status: string = "";
+identifier: string = "";
+originalPaymentReference: string = "";
+refundIdentifier: string = "";
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private cdr: ChangeDetectorRef) {
     //alert("Note! Index is Donation page.");
   }
 
   // handle form submission logic when donation button is clicked
   submitForm() {
+	this.startQRPayment();
+
     // set items to local storage
     localStorage.setItem("project-name", this.projectName);
     localStorage.setItem("donation-amount", this.donationAmount);
-
-    // console log to check the values
-    console.log('Form submitted!');
-    console.log('Project Name:', this.projectName);
-    console.log('Donation Amount:', this.donationAmount);
     // alert("DONE");
 
     // CALL API HERE
@@ -40,53 +38,30 @@ export class IndexComponent {
     // ...
 
     // success or failed
-    if(true) { // if payment went well
-      this.router.navigateByUrl('/thankyou');
-    } else { // payment failed
-      alert("Failed to donate. Please try again");
-    }
+    // if(true) { // if payment went well
+    //   this.router.navigateByUrl('/thankyou');
+    // } else { // payment failed
+    //   alert("Failed to donate. Please try again");
+    // }
 
   }
 
-  clear() {
-    this.identifier = ""
-		this.originalPaymentReference = ""
-		this.refundIdentifier = ""
-  }
 
-  updateStatus(status: string) {
-			this.status = status
-  }
-
-
-	paymentStatusClick() {
-		const id = this.identifier
-		if (!id || id.length <= 0) {
-			this.updateStatus("No payment Id")
-			return
-		}
-		this.getPaymentStatus(id, this.updateStatus.bind(this),  this.originalPaymentReference, this.identifier)
-	}
-
-  startQRPaymentClick() {
+  startQRPayment() {
 		if (this.donationAmount.length <= 0) {
 			this.updateStatus("Amount is required")
 			return
 		}
-		const amount = this.donationAmount
-		const project = this.projectName
 
-		this.postQRPayment(amount, project)	
+		this.postQRPayment(this.updateStatus.bind(this), this.identifier, this.baseURL, this.qrCodeUrl)	
 		this.updateStatus("Request sent")
 	}
 
-  postQRPayment(
-    amount: string, 
-    project: string, 
-    updateStatus = this.updateStatus.bind(this), 
-    identifier = this.identifier, 
-    baseURL = this.baseURL,
-    QRelSrc = this.QRelSrc,
+  postQRPayment( 
+    updateStatus : (status: string) => void,
+    identifier: string,
+    baseURL: string,
+    qrCodeUrl: string | null,
     ) {
 
 		const url = this.baseURL + "paymentrequests"
@@ -96,8 +71,8 @@ export class IndexComponent {
 				'Content-Type': 'application/json'
 			},  
 			body: JSON.stringify({
-				amount: amount,
-				project: project
+				amount: this.donationAmount,
+				project: this.projectName
 			})
 		})
 		.then(function(response) {
@@ -107,7 +82,7 @@ export class IndexComponent {
 			}
 			return response.json();
 		})
-		.then(function(json) {
+		.then((json) => {
 			if (json) {
 				identifier = json["id"];
 				const token = json["token"];
@@ -123,7 +98,9 @@ export class IndexComponent {
 				})
 				.then((blob) => {
 					var objectURL = URL.createObjectURL(blob);
-					QRelSrc = objectURL;
+					qrCodeUrl = objectURL;
+					this.qrCodeUrl = objectURL;
+					// this.cdr.detectChanges();
 					return blob
 				})
 				.catch(function (error) {  
@@ -165,5 +142,26 @@ export class IndexComponent {
 			console.log("Request failure: ", error);  
 		});
 	}
+
+	clear() {
+		this.identifier = ""
+			this.originalPaymentReference = ""
+			this.refundIdentifier = ""
+	  }
+	
+	  updateStatus(status: string) {
+				this.status = status
+	  }
+	
+	
+		paymentStatusClick() {
+			const id = this.identifier
+			if (!id || id.length <= 0) {
+				this.updateStatus("No payment Id")
+				return
+			}
+			this.getPaymentStatus(id, this.updateStatus.bind(this),  this.originalPaymentReference, this.identifier)
+		}
+	
 
 }

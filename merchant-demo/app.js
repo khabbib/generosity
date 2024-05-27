@@ -2,8 +2,10 @@ const express = require('express')
 const request = require('request')
 const fs = require('fs')
 const path = require('path')
+const cors = require('cors')
 
 const app = express()
+app.use(cors());
 app.use(express.json())
 
 const agent = {	

@@ -1,22 +1,21 @@
-<section ng-app="myApp">
+<section>
     <h1>Donation</h1>
 
-    <form ng-controller="FormController">
+    <form>
         <div class="form-group">
             <label for="projectName">Enter the project name you want to donate to:</label>
-            <input #projectNameInput type="text" class="form-control" id="projectName" placeholder="Enter project name" ng-model="projectName">
+            <input type="text" class="form-control" id="projectName" name="projectName" placeholder="Enter project name" [(ngModel)]="projectName">
         </div>
 
         <div class="form-group">
             <label for="donationAmount">Enter the donation amount:</label>
-            <input #donationAmountInput type="text" class="form-control" id="donationAmount" placeholder="Donation amount" ng-model="donationAmount">
+            <input type="text" class="form-control" id="donationAmount" name="donationAmount" placeholder="Donation amount" [(ngModel)]="donationAmount">
         </div>
-        <div class="form-group">
-            <label for="donationAmount">Enter the donation amount:</label>
-            <input #donationAmountInput type="text" class="form-control" id="donationAmount" placeholder="Donation amount" ng-model="donationAmount">
-        </div>
-
-        <button type="submit" class="btn btn-primary" 
-        ng-click="submitForm()">Donate</button>
+     
+        <button type="button" class="btn btn-primary" (click)="submitForm()">Donate</button>
     </form>
+
+    <div *ngIf="qrCodeUrl" class="qr-code">
+        <img [src]="qrCodeUrl" alt="QR Code" style="width:400px;height:400px;" />
+      </div>
 </section>

@@ -3,6 +3,9 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { FormsModule } from '@angular/forms';
+
+
 
 // Routing
 import {CoreModule} from './core/core.module';
@@ -23,7 +26,8 @@ import {CommonModule} from '@angular/common';
     CommonModule,
     BrowserModule,
     AppRoutingModule,
-    CoreModule
+    CoreModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
