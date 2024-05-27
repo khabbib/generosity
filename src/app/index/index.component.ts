@@ -51,6 +51,12 @@ export class IndexComponent {
 		this.originalPaymentReference = ""
 		this.refundIdentifier = ""
   }
-  
+
+  setCommerceType(type: string) {
+		if (type != this.commerceType) {
+			this.clear()
+			this.commerceType = type
+		}
+	}
 
 }
