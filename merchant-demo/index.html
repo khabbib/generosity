@@ -262,11 +262,9 @@
 					}
 				})
 				.then((response) => {
-					console.log({response})
 					return response.blob();
 				})
 				.then((blob) => {
-					console.log({blob})
 					var objectURL = URL.createObjectURL(blob);
 					document.getElementById("QR").src = objectURL;
 					return blob

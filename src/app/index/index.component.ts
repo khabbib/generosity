@@ -11,6 +11,12 @@ export class IndexComponent {
   projectName: string = '';
   donationAmount: string = '';
 
+  baseURL: string = "http://" + window.location.host + "/";
+	commerceType: string = "ecom";
+	identifier: string = "";
+	originalPaymentReference: string = "";
+	refundIdentifier: string = "";
+
   constructor(private router: Router) {
     //alert("Note! Index is Donation page.");
   }
@@ -25,9 +31,10 @@ export class IndexComponent {
     console.log('Form submitted!');
     console.log('Project Name:', this.projectName);
     console.log('Donation Amount:', this.donationAmount);
-    alert("DONE");
+    // alert("DONE");
 
     // CALL API HERE
+
     // ...
 
     // success or failed
@@ -38,5 +45,12 @@ export class IndexComponent {
     }
 
   }
+
+  clear() {
+    this.identifier = ""
+		this.originalPaymentReference = ""
+		this.refundIdentifier = ""
+  }
+  
 
 }
