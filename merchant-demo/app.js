@@ -16,42 +16,38 @@ const agent = {
 	passphrase: "swish"
 }
 
-const prodConfig = {
-	payeeAlias: "YOUR_PAYEE_ALIAS",
-	host: "https://cpc.getswish.net/swish-cpcapi",
-	qrHost: "https://mpc.getswish.net/qrg-swish",
-	cert: path.resolve(__dirname, 'ssl/prod.pem'),
-	key: path.resolve(__dirname, 'ssl/prod.key'),
-	passphrase: null
-}
-
 const config = agent
 
 // Demo Web Frontend
 app.get('/', function(req, res) {
 	res.sendFile(path.join(__dirname + '/index.html'));
 });
+app.get('/done', function(req, res) {
+	res.send("Done");
+});
 
 // Create Payment Request
 app.post('/paymentrequests', function (req, res) {
 
-	// NOTE: the callbackUrl will be called by the swish system when the status of the 
-	//       payment is changed. This will normally be an endpoint in the merchants system.
-	//       Since this sample is likely run on a local machine, we can't really act on the
-	//       callback. We entered this example here that is using a service that lets you see
-	//       how the callback looks. To see it in action, open https://webhook.site in a browser
-	//       and replace the callbackUrl below with your unique url
-	const json = {
-		payeePaymentReference: "0123456789",
-		callbackUrl: "https://webhook.site/a8f9b5c2-f2da-4bb8-8181-fcb84a6659ea",
-		payeeAlias: config.payeeAlias,
-		payerAlias: req.body.payerAlias,
+	// const json = {
+	// 	payeePaymentReference: "0123456789",
+	// 	callbackUrl: "https://webhook.site/a8f9b5c2-f2da-4bb8-8181-fcb84a6659ea",
+	// 	payeeAlias: config.payeeAlias,
+	// 	payerAlias: req.body.payerAlias,
+	// 	amount: req.body.amount,
+	// 	currency: "SEK",
+	// 	message: req.body.message
+	// }
+	const data = {
+		payeeAlias: '1231111111',
+		currency: 'SEK',
+		callbackUrl: 'https://webhook.site/a8f9b5c2-f2da-4bb8-8181-fcb84a6659ea',
 		amount: req.body.amount,
-		currency: "SEK",
-		message: req.body.message
-	}
+		message: req.body.message,
+		payerAlias: req.body.payerAlias,
+	  };
 
-	const options = requestOptions('POST', `${config.host}/api/v1/paymentrequests`, json)
+	const options = requestOptions('POST', `${config.host}/api/v1/paymentrequests`, data)
 
 	request(options, (error, response, body) => { 
 		//logResult(error, response)
