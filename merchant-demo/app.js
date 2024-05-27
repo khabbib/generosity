@@ -8,6 +8,7 @@ const app = express()
 app.use(cors());
 app.use(express.json())
 
+// Swish Config - test Certificates
 const agent = {	
 	payeeAlias: "1231181189",
 	host: "https://mss.cpc.getswish.net/swish-cpcapi",
@@ -18,28 +19,9 @@ const agent = {
 	passphrase: "swish"
 }
 
-const config = agent
-
-// Demo Web Frontend
-app.get('/', function(req, res) {
-	res.sendFile(path.join(__dirname + '/index.html'));
-});
-app.get('/done', function(req, res) {
-	res.send("Done");
-});
 
 // Create Payment Request
-app.post('/paymentrequests', function (req, res) {
-
-	// const json = {
-	// 	payeePaymentReference: "0123456789",
-	// 	callbackUrl: "https://webhook.site/a8f9b5c2-f2da-4bb8-8181-fcb84a6659ea",
-	// 	payeeAlias: config.payeeAlias,
-	// 	payerAlias: req.body.payerAlias,
-	// 	amount: req.body.amount,
-	// 	currency: "SEK",
-	// 	message: req.body.message
-	// }
+app.post('/paymentrequests',  (req, res) => {
 	const data = {
 		payeeAlias: '1231111111',
 		currency: 'SEK',
@@ -49,11 +31,10 @@ app.post('/paymentrequests', function (req, res) {
 		payerAlias: req.body.payerAlias,
 	  };
 
-	const options = requestOptions('POST', `${config.host}/api/v1/paymentrequests`, data)
+	const options = requestOptions('POST', `${agent.host}/api/v1/paymentrequests`, data)
 
 	request(options, (error, response, body) => { 
 		//logResult(error, response)
-
 		if (!response) {
 			res.status(500).send(error)
 			return
@@ -61,18 +42,13 @@ app.post('/paymentrequests', function (req, res) {
 		
 		res.status(response.statusCode)
 		if (response.statusCode == 201) { 
-			// Payment request was successfully created. In order to get the details of the
-			// newly created request, we need to make a GET request to the url in the location header
-
 			const location = response.headers['location']
 			const token = response.headers['paymentrequesttoken']
 
 			const opt = requestOptions('GET', location)
 
 			request(opt, (err, resp, bod) => {
-
 				//logResult(err, resp)
-
 				if (!response) {
 					res.status(500).send(error)
 					return
@@ -95,8 +71,8 @@ app.post('/paymentrequests', function (req, res) {
 })
 
 // Get Payment Request
-app.get('/paymentrequests/:requestId', function (req, res) {
-	const options = requestOptions('GET', `${config.host}/api/v1/paymentrequests/${req.params.requestId}`)
+app.get('/paymentrequests/:requestId', (req, res) => {
+	const options = requestOptions('GET', `${agent.host}/api/v1/paymentrequests/${req.params.requestId}`)
 
 	request(options, (error, response, body) => {
 
@@ -124,19 +100,18 @@ app.get('/paymentrequests/:requestId', function (req, res) {
 })
 
 // Create Refund
-app.post('/refunds', function (req, res) {
-
+app.post('/refunds',  (req, res) => {
 	const json = {
 		payeePaymentReference: "0123456789",
 		originalPaymentReference: req.body.originalPaymentReference,
 		callbackUrl: "https://webhook.site/a8f9b5c2-f2da-4bb8-8181-fcb84a6659ea",
-		payerAlias: config.payeeAlias,
+		payerAlias: agent.payeeAlias,
 		amount: req.body.amount,
 		currency: "SEK",
 		message: req.body.message
 	}
 
-	const options = requestOptions('POST', `${config.host}/api/v1/refunds`, json)
+	const options = requestOptions('POST', `${agent.host}/api/v1/refunds`, json)
 
 	request(options, (error, response, body) => {
 
@@ -178,9 +153,9 @@ app.post('/refunds', function (req, res) {
 })
 
 // Get Refund
-app.get('/refunds/:refundId', function (req, res) {
+app.get('/refunds/:refundId',  (req, res) => {
 
-	const options = requestOptions('GET', `${config.host}/api/v1/refunds/${req.params.refundId}`)
+	const options = requestOptions('GET', `${agent.host}/api/v1/refunds/${req.params.refundId}`)
 
 	console.log(req)
 
@@ -210,10 +185,8 @@ app.get('/refunds/:refundId', function (req, res) {
 })
 
 // Get QR Code
-app.get('/qr/:token', function (req, res) {
-
+app.get('/qr/:token',  (req, res) => {
 	const token = req.params.token
-
 	const json = {
 		token: token,
 		size: "600",
@@ -221,12 +194,10 @@ app.get('/qr/:token', function (req, res) {
 		border: "0"
 	}
 
-	const options = requestOptions('POST', `${config.qrHost}/api/v1/commerce`, json)
+	const options = requestOptions('POST', `${agent.qrHost}/api/v1/commerce`, json)
 
 	request(options, (error, response, body) => {
-
 		logResult(error, response)
-
 		if (!response) {
 			res.status(500).send(error)
 			return
@@ -235,21 +206,24 @@ app.get('/qr/:token', function (req, res) {
 	}).pipe(res)
 })
 
-function requestOptions(method, uri, body) {
+
+// ------------- helper functions
+
+const requestOptions = (method, uri, body) => {
 	return {
 		method: method,
 		uri: uri,
 		json: true,
 		body: body,
 		'content-type': 'application/json',
-		cert: fs.readFileSync(config.cert),
-		key: fs.readFileSync(config.key),
-		ca: config.ca ? fs.readFileSync(config.ca) : null,
-		passphrase: config.passphrase
+		cert: fs.readFileSync(agent.cert),
+		key: fs.readFileSync(agent.key),
+		ca: agent.ca ? fs.readFileSync(agent.ca) : null,
+		passphrase: agent.passphrase
 	}
 }
 
-function logResult(error, response) {
+const logResult = (error, response) => {
 	if (error) {			
 		console.log(error)
 	} 
@@ -260,4 +234,4 @@ function logResult(error, response) {
 	}
 }
 
-app.listen(3000, () => console.log(`Merchant Demo app listening on port 3000`))
+app.listen(3000, () => console.log(`Swish-server is listening on port 3000`))
