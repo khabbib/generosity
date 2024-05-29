@@ -11,6 +11,7 @@ import SupabaseService from '../shared/supabaseDB';
 })
 export class IndexComponent {
 
+	projectText: string = '';
 	projectName: string = '';
 	donationAmount: string = '';
 	qrCodeUrl: string | null = null;
@@ -23,7 +24,6 @@ export class IndexComponent {
 	refundIdentifier: string = "";
 	pollingInterval: any;
 
-	isProjectPicked: boolean = false;
 
   constructor(private router: Router, private cdr: ChangeDetectorRef) {
     //alert("Note! Index is Donation page.");
@@ -73,8 +73,8 @@ export class IndexComponent {
 
   handleProjectPicked(project: any) {
     console.log('Picked project:', project);
-	this.isProjectPicked = true;
 	this.projectName = project.title
+	this.projectText = project.text
     // Handle the picked project as needed
   }
   // handle form submission logic when donation button is clicked
