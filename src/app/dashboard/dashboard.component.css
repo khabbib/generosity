@@ -15,20 +15,29 @@
   button {
     width: 80%;
   }
-  
-  /* Desktop */
-  @media screen and (max-width: 1300px) {
-    canvas {
-      width: 100%;
-      height: 100%;
-    }
+
+  section {
+    background-color: white;
+    border: 3px solid #eee;
+  }
+
+  h1 {
+    margin-left: 20px;
   }
   
-  /* Tablet */
+/* Desktop */
+@media screen and (max-width: 1300px) {
+  canvas {
+    width: 90%;
+    height: 100%;
+  }
+}
+  
+/* Tablet */
 @media screen and (max-width: 900px) {
   canvas {
-    width: 12rem;
-    height: 20rem;
+    width: 80%;
+    height: 100%;
   }
 
   button {
@@ -39,12 +48,13 @@
 /* Mobile */
 @media screen and (max-width: 500px) {
   canvas {
-    width: 16rem;
-    height: 40rem;
+    width: 80%;
+    height: 100%;
   }
 
   button {
     margin-top: 12px;
+    width: 100%;
   }
 }
   
