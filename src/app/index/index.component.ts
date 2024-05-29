@@ -11,6 +11,7 @@ import SupabaseService from '../shared/supabaseDB';
 })
 export class IndexComponent {
 
+	// variable names
 	projectName: string = '';
 	donationAmount: string = '';
 	qrCodeUrl: string | null = null;
@@ -23,37 +24,17 @@ export class IndexComponent {
 	refundIdentifier: string = "";
 	pollingInterval: any;
 
-  constructor(private router: Router, private cdr: ChangeDetectorRef) {
-    //alert("Note! Index is Donation page.");
+	constructor(private router: Router, private cdr: ChangeDetectorRef) {
+		//alert("Note! Index is Donation page.");
+	}
 
-  }
+	// handle form submission logic when donation button is clicked
+	submitForm() {
+		this.startQRPayment();
+	}
 
-  // handle form submission logic when donation button is clicked
-  submitForm() {
-	this.startQRPayment();
-
-	
-
-    // set items to local storage
-    localStorage.setItem("project-name", this.projectName);
-    localStorage.setItem("donation-amount", this.donationAmount);
-    // alert("DONE");
-
-    // CALL API HERE
-
-    // ...
-
-    // success or failed
-    // if(true) { // if payment went well
-    //   this.router.navigateByUrl('/thankyou');
-    // } else { // payment failed
-    //   alert("Failed to donate. Please try again");
-    // }
-
-  }
-
-
-  startQRPayment() {
+	startQRPayment() {
+		// check if not empty
 		if (this.donationAmount.length <= 0) {
 			this.updateStatus("Amount is required")
 			return
@@ -63,7 +44,8 @@ export class IndexComponent {
 		this.updateStatus("Request sent")
 	}
 
-  postQRPayment() {
+	// api call to perform POST
+  	postQRPayment() {
 
 		const url = this.baseURL + "paymentrequests"
 		fetch(url, {  
@@ -118,8 +100,8 @@ export class IndexComponent {
 		});
 	}
   
-
-  getPaymentStatus(
+	// get payment status to print
+  	getPaymentStatus(
     id: string, 
     ) {
 
@@ -145,9 +127,9 @@ export class IndexComponent {
 				clearInterval(this.pollingInterval);
 				this.clear();
 				setTimeout(() => {
-						// this.router.navigateByUrl('/thankyou');
+						this.router.navigateByUrl('/thankyou');
 						this.qrCodeUrl = ""
-						this.updateStatus("thanks for donating :)")
+						//this.updateStatus("thanks for donating :)")
 					}, 3000)
 			}
 		})
@@ -157,24 +139,25 @@ export class IndexComponent {
 		});
 	}
 
-
+	// payment info
 	savePaymentInformation(paymentReference: string, name: any, amount: any, ) {
 		console.log("Name: " ,name, " amaount: " , amount);
 		console.log("Saving: " , paymentReference)
 	}
+
+	// reset
 	clear() {
 		this.identifier = ""
 		this.originalPaymentReference = ""
 		this.refundIdentifier = ""
 		this.projectName = ""
 		this.donationAmount = ""
-	  }
+	}
 	
-	  updateStatus(status: string) {
+	// status of the respons
+	updateStatus(status: string) {
 			this.status = status
-	  }
-	
-	
+	}
 	paymentStatusClick() {
 		const id = this.identifier
 		if (!id || id.length <= 0) {
@@ -184,5 +167,4 @@ export class IndexComponent {
 		this.getPaymentStatus(id)
 	}
 	
-
 }
