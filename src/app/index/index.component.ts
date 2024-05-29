@@ -84,11 +84,6 @@ export class IndexComponent {
 
   }
 
-	// handle form submission logic when donation button is clicked
-	submitForm() {
-		this.startQRPayment();
-	}
-
 	startQRPayment() {
 		// check if not empty
 		if (this.donationAmount.length <= 0) {
