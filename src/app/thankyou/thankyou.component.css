@@ -1,5 +1,32 @@
 section { 
-    background-color: rgb(67, 185, 67) !important;
     text-align: center;
     padding: 100px;
+    border: 3px solid #eee;
+}
+
+button {
+    margin-top: 20px;
+    width: 20%;
+    margin: 10px;
+}
+
+h2 {
+    color: rgb(67, 185, 67) !important;
+}
+
+/* Desktop */
+@media screen and (max-width: 1300px) {
+    /* default */
+}
+
+/* Tablet */
+@media screen and (max-width: 900px) {
+    /* default */
+}
+
+/* Mobile */
+@media screen and (max-width: 500px) {
+    button {
+        width: 100%;
+    }
 }
