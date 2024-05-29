@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Chart, ChartType, registerables } from 'chart.js';
+import SupabaseService from '../shared/supabaseDB';
 
-//Temporary
 interface DonationData {
   project: string;
   totalDonations: number;
@@ -15,43 +15,93 @@ interface DonationData {
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-
-//Fake temporary Data
 export class DashboardComponent implements OnInit {
-  donationsData: DonationData[] = [
-    { project: 'Project Mobi Study V2', totalDonations: 10000, numberOfDonors: 50, percentageOfTotalFunds: 40, percentageOfDonors: 40 },
-    { project: 'Project improve Skånetrafiken', totalDonations: 15000, numberOfDonors: 75, percentageOfTotalFunds: 50, percentageOfDonors: 50 },
-    { project: 'Project undermine Lunds university', totalDonations: 8000, numberOfDonors: 30, percentageOfTotalFunds: 10, percentageOfDonors: 10 }
-  ];
-
+  donationsData: DonationData[] = [];
   currentFrame: 'week' | 'month' | 'year' = 'week';
   barChart1?: Chart;
   barChart2?: Chart;
   pieChart1?: Chart;
   pieChart2?: Chart;
 
-  constructor() {
+  constructor(private supabaseService: SupabaseService) {
     Chart.register(...registerables);
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    await this.loadChartData();
     this.createCharts();
-    this.loadChartData();
+  }
+
+  async loadChartData(): Promise<void> {
+    const localData = localStorage.getItem(`donationsData_${this.currentFrame}`);
+    if (localData) {
+      this.donationsData = JSON.parse(localData);
+    } else {
+      try {
+        this.donationsData = await this.supabaseService.getDonationData(this.currentFrame);
+        localStorage.setItem(`donationsData_${this.currentFrame}`, JSON.stringify(this.donationsData));
+      } catch (error) {
+        console.error('Error loading chart data:', error);
+      }
+    }
+    console.log("Loaded donationsData: ", this.donationsData); 
+    this.updateCharts();
   }
 
   setTimeFrame(frame: 'week' | 'month' | 'year'): void {
     this.currentFrame = frame;
-    this.updateCharts();
+    this.loadChartData(); 
   }
 
   createCharts(): void {
-    this.barChart1 = this.createChart('barChart1', 'bar', 'Total Donations (SEK)', this.getTotalDonations(), ['rgba(75, 192, 192, 0.2)'], ['rgba(75, 192, 192, 1)']);
-    this.barChart2 = this.createChart('barChart2', 'bar', 'Number of Donors', this.getNumberOfDonors(), ['rgba(153, 102, 255, 0.2)'], ['rgba(153, 102, 255, 1)']);
-    this.pieChart1 = this.createChart('pieChart1', 'pie', 'Percentage of Total Funds', this.getPercentageOfTotalFunds(), ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)'], ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)']);
-    this.pieChart2 = this.createChart('pieChart2', 'pie', 'Percentage of Donors', this.getPercentageOfDonors(), ['rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)'], ['rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)']);
+    if (!this.barChart1) {
+      this.barChart1 = this.createChart(
+        'barChart1',
+        'bar',
+        'Total Donations (SEK)',
+        this.getTotalDonations(),
+        this.getColorArray('backgroundColor'),
+        this.getColorArray('borderColor')
+      );
+    }
+
+    if (!this.barChart2) {
+      this.barChart2 = this.createChart(
+        'barChart2',
+        'bar',
+        'Number of Donors',
+        this.getNumberOfDonors(),
+        this.getColorArray('backgroundColor'),
+        this.getColorArray('borderColor')
+      );
+    }
+
+    if (!this.pieChart1) {
+      this.pieChart1 = this.createChart(
+        'pieChart1',
+        'pie',
+        'Percentage of Total Funds',
+        this.getPercentageOfTotalFunds(),
+        this.getColorArray('backgroundColor'),
+        this.getColorArray('borderColor'),
+        'Percentage of Total Funds'
+      );
+    }
+
+    if (!this.pieChart2) {
+      this.pieChart2 = this.createChart(
+        'pieChart2',
+        'pie',
+        'Percentage of Donors',
+        this.getPercentageOfDonors(),
+        this.getColorArray('backgroundColor'),
+        this.getColorArray('borderColor'),
+        'Percentage of Donors'
+      );
+    }
   }
 
-  createChart(elementId: string, chartType: ChartType, label: string, data: number[], backgroundColor: string[], borderColor: string[]): Chart {
+  createChart(elementId: string, chartType: ChartType, label: string, data: number[], backgroundColor: string[], borderColor: string[], title?: string): Chart {
     const ctx = document.getElementById(elementId) as HTMLCanvasElement;
     return new Chart(ctx, {
       type: chartType,
@@ -68,50 +118,72 @@ export class DashboardComponent implements OnInit {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: !!title,
+            text: title
+          }
+        },
         scales: chartType === 'bar' ? { y: { beginAtZero: true } } : undefined
       }
     });
   }
 
   updateCharts(): void {
-    this.updateChart(this.barChart1, this.getTotalDonations());
-    this.updateChart(this.barChart2, this.getNumberOfDonors());
-    this.updateChart(this.pieChart1, this.getPercentageOfTotalFunds());
-    this.updateChart(this.pieChart2, this.getPercentageOfDonors());
+    console.log("Updating charts with data: ", this.donationsData);
+    this.updateChart(this.barChart1, this.getTotalDonations(), this.getColorArray('backgroundColor'), this.getColorArray('borderColor'));
+    this.updateChart(this.barChart2, this.getNumberOfDonors(), this.getColorArray('backgroundColor'), this.getColorArray('borderColor'));
+    this.updateChart(this.pieChart1, this.getPercentageOfTotalFunds(), this.getColorArray('backgroundColor'), this.getColorArray('borderColor'));
+    this.updateChart(this.pieChart2, this.getPercentageOfDonors(), this.getColorArray('backgroundColor'), this.getColorArray('borderColor'));
   }
 
-  updateChart(chart: Chart | undefined, data: number[]): void {
+  updateChart(chart: Chart | undefined, data: number[], backgroundColor: string[], borderColor: string[]): void {
     if (chart) {
+      console.log("Updating chart with data: ", data); 
+      chart.data.labels = this.getLabels();
       chart.data.datasets[0].data = data;
+      chart.data.datasets[0].backgroundColor = backgroundColor;
+      chart.data.datasets[0].borderColor = borderColor;
       chart.update();
     }
   }
 
   getLabels(): string[] {
+    console.log("Lable: " , this.donationsData.map(data => data.project))
     return this.donationsData.map(data => data.project);
   }
 
   getTotalDonations(): number[] {
-    return this.donationsData.map(data => data.totalDonations);
+    const totalDonations = this.donationsData.map(data => data.totalDonations);
+    console.log("Total Donations Data: ", totalDonations); 
+    return totalDonations;
   }
 
   getNumberOfDonors(): number[] {
-    return this.donationsData.map(data => data.numberOfDonors);
+    const numberOfDonors = this.donationsData.map(data => data.numberOfDonors);
+    console.log("Number of Donors Data: ", numberOfDonors);
+    return numberOfDonors;
   }
 
   getPercentageOfTotalFunds(): number[] {
-    return this.donationsData.map(data => data.percentageOfTotalFunds);
+    const percentageOfTotalFunds = this.donationsData.map(data => data.percentageOfTotalFunds);
+    console.log("Percentage of Total Funds Data: ", percentageOfTotalFunds); 
+    return percentageOfTotalFunds;
   }
 
   getPercentageOfDonors(): number[] {
-    return this.donationsData.map(data => data.percentageOfDonors);
+    const percentageOfDonors = this.donationsData.map(data => data.percentageOfDonors);
+    console.log("Percentage of Donors Data: ", percentageOfDonors); 
+    return percentageOfDonors;
   }
 
-  saveChartData(): void {
-    // Local storage so API isnt called everytime?
-  }
-
-  loadChartData(): void {
-    // Local storage so API isnt called everytime?
+  getColorArray(type: 'backgroundColor' | 'borderColor'): string[] {
+    const colors = [
+      'rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)'
+    ];
+    const borderColors = [
+      'rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)'
+    ];
+    return type === 'backgroundColor' ? colors : borderColors;
   }
 }

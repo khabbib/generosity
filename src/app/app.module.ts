@@ -12,6 +12,7 @@ import {CoreModule} from './core/core.module';
 import {DashboardComponent} from './dashboard/dashboard.component';
 import {IndexComponent} from './index/index.component';
 import {ThankyouComponent} from './thankyou/thankyou.component';
+import SupabaseService from './shared/supabaseDB';
 
 import {CommonModule} from '@angular/common';
 
@@ -29,7 +30,7 @@ import {CommonModule} from '@angular/common';
     CoreModule,
     FormsModule
   ],
-  providers: [],
+  providers: [SupabaseService], // Provide SupabaseService here
   bootstrap: [AppComponent]
 })
 export class AppModule { }

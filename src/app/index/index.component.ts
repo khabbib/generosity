@@ -1,5 +1,7 @@
 import {Component, ChangeDetectorRef} from '@angular/core';
 import { Router } from '@angular/router';
+import SupabaseService from '../shared/supabaseDB';
+
 
 
 @Component({
@@ -23,6 +25,7 @@ export class IndexComponent {
 
   constructor(private router: Router, private cdr: ChangeDetectorRef) {
     //alert("Note! Index is Donation page.");
+
   }
 
   // handle form submission logic when donation button is clicked
@@ -135,6 +138,10 @@ export class IndexComponent {
 			this.updateStatus("Payment(identifier: " + this.identifier + ", paymentReference: "+ this.originalPaymentReference + ") " + json.status)
 			if (json.status == "PAID") {
 				this.originalPaymentReference = json["paymentReference"];
+				console.log("In main doing DB")
+				const supabaseService = SupabaseService.getInstance();
+				const currentDate = new Date(); 
+				supabaseService.savePayment(this.originalPaymentReference, this.projectName,Number(this.donationAmount),currentDate)
 				clearInterval(this.pollingInterval);
 				this.clear();
 				setTimeout(() => {
@@ -150,6 +157,11 @@ export class IndexComponent {
 		});
 	}
 
+
+	savePaymentInformation(paymentReference: string, name: any, amount: any, ) {
+		console.log("Name: " ,name, " amaount: " , amount);
+		console.log("Saving: " , paymentReference)
+	}
 	clear() {
 		this.identifier = ""
 		this.originalPaymentReference = ""

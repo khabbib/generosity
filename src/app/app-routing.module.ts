@@ -6,6 +6,7 @@ import { ThankyouComponent } from './thankyou/thankyou.component';
 import { IndexComponent } from './index/index.component';
 
 
+
 const routes: Routes = [
   {path: 'index', component: IndexComponent},
   { path: 'dashboard', component: DashboardComponent },
