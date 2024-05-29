@@ -3,3 +3,51 @@
     width: 92%;
     margin: auto;
 }
+
+/* Desktop */
+@media screen and (max-width: 1300px) {
+    /* Standard */
+
+    body {
+        /*background-color: rgb(138, 138, 230);*/
+    }
+}
+
+/* Tablet */
+@media screen and (max-width: 900px) {
+
+    body {
+        /*background-color: rgb(126, 79, 79);*/
+    }
+
+    * {
+        width: 100%;
+        margin: auto;
+    }
+
+    input {
+        width: 90% !important;
+    }
+
+}
+
+/* Mobile */
+@media screen and (max-width: 500px) {
+    body {
+        /*background-color: rgb(104, 153, 104) !important;*/
+    }
+
+    * {
+        width: 100%;
+        margin: auto;
+    }
+
+    nav {
+        grid-template-columns: auto;
+        flex-direction: column;
+    }
+
+    input {
+        width: 90% !important;
+    }
+}
