@@ -4,11 +4,30 @@ section {
     padding: 20px;
 }
 
-div {
-    margin: 20px;
-}
 
 button {
     width: 100px;
-    margin-left: 20px;
+    margin-top: 20px;
+}
+
+
+.donationAmountInput {
+    color: lightgreen; /* Change to your desired color */
+    font-weight: bold;
+    outline: none; /* Remove the outline */
+}
+
+.donationAmountInput:focus {
+    outline-style: 0px !important; /* Ensure no outline on focus */
+}
+
+/* Remove the spinner/arrow buttons in number input */
+.donationAmountInput::-webkit-outer-spin-button,
+.donationAmountInput::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.donationAmountInput[type=number] {
+    -moz-appearance: textfield; /* Remove the spinner for Firefox */
 }

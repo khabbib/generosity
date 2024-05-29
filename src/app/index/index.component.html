@@ -1,24 +1,81 @@
 <section>
-    <h1>Donation</h1>
+  <h1>Projects</h1>
+  <app-projects
+    [projects]="projects"
+    (projectPicked)="handleProjectPicked($event)"
+  ></app-projects>
 
-    <form>
-        <div class="form-group">
-            <label for="projectName">Enter the project name you want to donate to:</label>
-            <input type="text" class="form-control" id="projectName" name="projectName" placeholder="Enter project name" [(ngModel)]="projectName">
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="exampleModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+             {{ projectName }}
+          </h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
+        <div *ngIf="isDonationInProgress" class="modal-body">
+          <!-- <form> -->
+            <div class="form-group">
+                <label style="border-bottom: 1px solid lightgray; padding-bottom: 1rem;">{{projectText}}</label>
+              <label style="padding: 1rem 0;" for="donationAmount">Enter the donation amount:</label>
+              <input
+                type="number"
+                class="form-control"
+                id="donationAmount"
+                name="donationAmount"
+                placeholder="Donation amount"
+                [(ngModel)]="donationAmount"
+                min="1"
+              />
+              <h3 *ngIf="donationAmount" style="color: #3333; text-align: center; padding-top: 1rem;"><span style="font-weight: 900; color: lightgreen;">{{donationAmount}} </span> SEK</h3>
+              
+            </div>
 
-        <div class="form-group">
-            <label for="donationAmount">Enter the donation amount:</label>
-            <input type="text" class="form-control" id="donationAmount" name="donationAmount" placeholder="Donation amount" [(ngModel)]="donationAmount">
-        </div>
-     
-        <button type="button" class="btn btn-primary" (click)="submitForm()">Donate</button>
-    </form>
+            
+          <!-- </form> -->
 
-    <div class="container">
-        <div *ngIf="qrCodeUrl" class="qr-code">
-            <img [src]="qrCodeUrl" alt="QR Code" style="width:400px;height:400px;" />
+          <div class="container" style="padding: 10px;">
+            <div *ngIf="qrCodeUrl" class="qr-code">
+              <img
+                [src]="qrCodeUrl"
+                alt="QR Code"
+                style="width: 300px; height: 300px"
+              />
+            </div>
+            <p id="Qstatus">{{ status }}</p>
+          </div>
+        
+        </div><!--  modal body -->
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Close
+          </button>
+          <button
+              type="button"
+              class="btn btn-primary"
+              (click)="submitForm()"
+            >
+              Donate
+            </button>
         </div>
-            <h3 id="Qstatus">{{status}}</h3>
+      </div>
     </div>
+  </div>
 </section>
