@@ -23,7 +23,7 @@ export class IndexComponent {
 	originalPaymentReference: string = "";
 	refundIdentifier: string = "";
 	pollingInterval: any;
-
+	isDonationInProgress: boolean  = false;
 
   constructor(private router: Router, private cdr: ChangeDetectorRef) {
     //alert("Note! Index is Donation page.");
@@ -72,6 +72,7 @@ export class IndexComponent {
   ]
 
   handleProjectPicked(project: any) {
+	this.isDonationInProgress = true;
     console.log('Picked project:', project);
 	this.projectName = project.title
 	this.projectText = project.text
@@ -194,9 +195,9 @@ export class IndexComponent {
 				clearInterval(this.pollingInterval);
 				this.clear();
 				setTimeout(() => {
-						// this.router.navigateByUrl('/thankyou');
-						this.qrCodeUrl = ""
+						//this.router.navigateByUrl('/thankyou');
 						this.updateStatus("thanks for donating :)")
+						this.isDonationInProgress = false;
 					}, 3000)
 			}
 		})

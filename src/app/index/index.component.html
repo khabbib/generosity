@@ -29,7 +29,7 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
+        <div *ngIf="isDonationInProgress" class="modal-body">
           <!-- <form> -->
             <div class="form-group">
                 <label style="border-bottom: 1px solid lightgray; padding-bottom: 1rem;">{{projectText}}</label>
