@@ -15,6 +15,7 @@ import {ThankyouComponent} from './thankyou/thankyou.component';
 import SupabaseService from './shared/supabaseDB';
 
 import {CommonModule} from '@angular/common';
+import { ProjectsComponent } from './projects/projects.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import {CommonModule} from '@angular/common';
     DashboardComponent,
     IndexComponent,
     ThankyouComponent,
+    ProjectsComponent,
   ],
   imports: [
     CommonModule,

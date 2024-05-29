@@ -23,11 +23,45 @@ export class IndexComponent {
 	refundIdentifier: string = "";
 	pollingInterval: any;
 
+	isProjectPicked: boolean = false;
+
   constructor(private router: Router, private cdr: ChangeDetectorRef) {
     //alert("Note! Index is Donation page.");
 
   }
 
+  projects = [
+    {
+      title: 'Project 1',
+      text: 'Description for Project 1.',
+      imgSrc: 'https://via.placeholder.com/150',
+      link: '#'
+    },
+    {
+      title: 'Project 2',
+      text: 'Description for Project 2.',
+      imgSrc: 'https://via.placeholder.com/150',
+      link: '#'
+    },
+    {
+      title: 'Project 3',
+      text: 'Description for Project 3.',
+      imgSrc: 'https://via.placeholder.com/150',
+      link: '#'
+    },
+    {
+      title: 'Project 4',
+      text: 'Description for Project 4.',
+      imgSrc: 'https://via.placeholder.com/150',
+      link: '#'
+    }
+  ];
+
+  handleProjectPicked(project: any) {
+    console.log('Picked project:', project);
+	this.isProjectPicked = true;
+    // Handle the picked project as needed
+  }
   // handle form submission logic when donation button is clicked
   submitForm() {
 	this.startQRPayment();
