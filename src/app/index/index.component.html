@@ -1,11 +1,19 @@
 <section>
-    <h1>Donation</h1>
+    <h1>Projects</h1>
     <app-projects [projects]="projects" (projectPicked)="handleProjectPicked($event)"></app-projects>
-    <form *ngIf="isProjectPicked">
-        <!-- <div class="form-group">
-            <label for="projectName">Enter the project name you want to donate to:</label>
-            <input type="text" class="form-control" id="projectName" name="projectName" placeholder="Enter project name" [(ngModel)]="projectName">
-        </div> -->
+     
+  <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content" >
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Donate to {{projectName}}</h5>
+          <button type="button"  class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form *ngIf="isProjectPicked">
 
         <div class="form-group">
             <label for="donationAmount">Enter the donation amount:</label>
@@ -21,4 +29,13 @@
         </div>
             <h3 id="Qstatus">{{status}}</h3>
     </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
+
