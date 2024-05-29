@@ -82,28 +82,15 @@ export class IndexComponent {
   submitForm() {
 	this.startQRPayment();
 
-	
-
-    // set items to local storage
-    localStorage.setItem("project-name", this.projectName);
-    localStorage.setItem("donation-amount", this.donationAmount);
-    // alert("DONE");
-
-    // CALL API HERE
-
-    // ...
-
-    // success or failed
-    // if(true) { // if payment went well
-    //   this.router.navigateByUrl('/thankyou');
-    // } else { // payment failed
-    //   alert("Failed to donate. Please try again");
-    // }
-
   }
 
+	// handle form submission logic when donation button is clicked
+	submitForm() {
+		this.startQRPayment();
+	}
 
-  startQRPayment() {
+	startQRPayment() {
+		// check if not empty
 		if (this.donationAmount.length <= 0) {
 			this.updateStatus("Amount is required")
 			return
@@ -113,7 +100,8 @@ export class IndexComponent {
 		this.updateStatus("Request sent")
 	}
 
-  postQRPayment() {
+	// api call to perform POST
+  	postQRPayment() {
 
 		const url = this.baseURL + "paymentrequests"
 		fetch(url, {  
@@ -168,8 +156,8 @@ export class IndexComponent {
 		});
 	}
   
-
-  getPaymentStatus(
+	// get payment status to print
+  	getPaymentStatus(
     id: string, 
     ) {
 
@@ -207,24 +195,25 @@ export class IndexComponent {
 		});
 	}
 
-
+	// payment info
 	savePaymentInformation(paymentReference: string, name: any, amount: any, ) {
 		console.log("Name: " ,name, " amaount: " , amount);
 		console.log("Saving: " , paymentReference)
 	}
+
+	// reset
 	clear() {
 		this.identifier = ""
 		this.originalPaymentReference = ""
 		this.refundIdentifier = ""
 		this.projectName = ""
 		this.donationAmount = ""
-	  }
+	}
 	
-	  updateStatus(status: string) {
+	// status of the respons
+	updateStatus(status: string) {
 			this.status = status
-	  }
-	
-	
+	}
 	paymentStatusClick() {
 		const id = this.identifier
 		if (!id || id.length <= 0) {
@@ -234,5 +223,4 @@ export class IndexComponent {
 		this.getPaymentStatus(id)
 	}
 	
-
 }

@@ -32,6 +32,7 @@ export class DashboardComponent implements OnInit {
     this.createCharts();
   }
 
+  // load charts when page is loaded
   async loadChartData(): Promise<void> {
     const localData = localStorage.getItem(`donationsData_${this.currentFrame}`);
     if (localData) {
@@ -101,6 +102,7 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  // create charts elements
   createChart(elementId: string, chartType: ChartType, label: string, data: number[], backgroundColor: string[], borderColor: string[], title?: string): Chart {
     const ctx = document.getElementById(elementId) as HTMLCanvasElement;
     return new Chart(ctx, {
