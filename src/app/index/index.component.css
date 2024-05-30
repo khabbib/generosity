@@ -1,15 +1,13 @@
 section {
-    background-color: white;
+    background-color: rgb(255, 255, 255);
     border: 3px solid #eee;
     padding: 20px;
 }
-
 
 button {
     width: 100px;
     margin-top: 20px;
 }
-
 
 .donationAmountInput {
     color: lightgreen; /* Change to your desired color */
@@ -30,4 +28,48 @@ button {
 
 .donationAmountInput[type=number] {
     -moz-appearance: textfield; /* Remove the spinner for Firefox */
+}
+
+/* Sucess message*/
+.thankyou-content {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.thankyou-btn {
+    margin-top: 20px;
+    width: 20%;
+    margin: 10px;
+}
+
+.thankyou-text {
+    color: rgb(67, 185, 67) !important;
+}
+
+/* Process is taking */
+.spinner-border {
+    padding: 40px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Project images */
+img {
+    width: 150px;
+    height: 150px;
+}
+
+/* Desktop */
+@media screen and (max-width: 1300px) {
+    /* default */
+}
+
+/* Tablet */
+@media screen and (max-width: 900px) {
+    /* default */
+}
+
+/* Mobile */
+@media screen and (max-width: 500px) {
+    /* default */
 }

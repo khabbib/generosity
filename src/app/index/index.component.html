@@ -20,7 +20,7 @@
           <h5 class="modal-title" id="exampleModalLabel">
              {{ projectName }}
           </h5>
-          <button
+          <button *ngIf="!submitClicked"
             type="button"
             class="close"
             data-dismiss="modal"
@@ -58,12 +58,24 @@
                 style="width: 300px; height: 300px"
               />
             </div>
-            <p id="Qstatus">{{ status }}</p>
+            <p id="Qstatus" [ngStyle]="{'color': statusColor}">{{ status }}</p>
           </div>
         
         </div><!--  modal body -->
 
-        <div class="modal-footer">
+        <div *ngIf="qrCodeUrl" class="spinner-border" role="status">
+          <span class="sr-only"></span>
+        </div>
+
+        <div *ngIf="!isDonationInProgress" class="thankyou-content">
+          <h2 class="thankyou-text">Thank you for your donation!</h2>
+          <!--
+          <button type="button" class="btn btn-primary thankyou-btn" onclick="window.location.href='/'">Donate more</button>
+          <button type="button" class="btn btn-primary thankyou-btn" onclick="window.location.href='/dashboard'">Statistics</button>
+          -->
+        </div>
+
+        <div *ngIf="!submitClicked" class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">
             Close
           </button>

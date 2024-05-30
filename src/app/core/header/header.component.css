@@ -6,3 +6,20 @@ nav {
 a {
     color: #fff !important;
 }
+
+/* Desktop */
+@media screen and (max-width: 1300px) {
+    /* default */
+}
+
+/* Tablet */
+@media screen and (max-width: 900px) {
+    /* default */
+}
+
+/* Mobile */
+@media screen and (max-width: 500px) {
+    nav {
+        width: auto !important;
+    }
+}

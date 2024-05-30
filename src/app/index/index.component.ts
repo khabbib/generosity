@@ -19,54 +19,54 @@ export class IndexComponent {
 	localhost: string =  'localhost:3000';
 	baseURL: string = "http://" + this.localhost+ "/";
 	status: string = "";
+	statusColor: string = "";
 	identifier: string = "";
 	originalPaymentReference: string = "";
 	refundIdentifier: string = "";
 	pollingInterval: any;
 	isDonationInProgress: boolean  = false;
+	submitClicked: boolean  = false;
 
   constructor(private router: Router, private cdr: ChangeDetectorRef) {
     //alert("Note! Index is Donation page.");
 
   }
-
- 
-
+  
   projects = [
     {
       title: 'Revolutionary To-Do List',
       text: 'Say goodbye to ordinary to-do lists! This project brings a revolutionary new way to manage your tasks with added fun features to keep you motivated and productive.',
-      imgSrc:"https://via.placeholder.com/150",
+      imgSrc:"../../assets/projects/Revolutionary To-Do List.jpg",
       link: '#'
     },
     {
       title: 'Smart Home Automation',
       text: 'Automate your home with ease. This project integrates various smart devices into a seamless and easy-to-use system, making your life more convenient and efficient.',
-      imgSrc:"https://via.placeholder.com/150",
+      imgSrc:"../../assets/projects/Smart Home Automation.jpg",
       link: '#'
     },
     {
       title: 'Fitness Tracker Deluxe',
       text: 'Take your fitness journey to the next level with this deluxe tracker. Monitor your progress, set goals, and stay motivated with advanced features and insights.',
-      imgSrc:"https://via.placeholder.com/150",
+      imgSrc:"../../assets/projects/Fitness Tracker Deluxe.jpg",
       link: '#'
     },
     {
       title: 'Eco-Friendly Gardening',
       text: 'Create a sustainable and eco-friendly garden with our innovative tools and tips. This project guides you through building a garden that’s good for you and the planet.',
-      imgSrc:"https://via.placeholder.com/150",
+      imgSrc:"../../assets/projects/Eco-Friendly Gardening.png",
       link: '#'
     },
     {
       title: 'The Great Spaghetti Code Cleanup',
       text: 'Ever felt like your codebase is a plate of tangled spaghetti? Fear not! This project tackles the most chaotic codebases, transforming them into clean, readable, and maintainable works of art. No more noodle nightmares!',
-      imgSrc:"https://via.placeholder.com/150",
+      imgSrc:"../../assets/projects/The Great Spaghetti Code Cleanup.jpg",
       link: '#'
     },
     {
       title: 'AI-Powered Coffee Maker: Java with Java',
       text: 'Tired of manually brewing your coffee every morning? Let our AI-powered coffee maker, coded entirely in Java, do it for you! Wake up to the perfect cup of coffee, every single day, with a touch of programming humor.',
-      imgSrc:"https://via.placeholder.com/150",
+      imgSrc:"../../assets/projects/AI-Powered Coffee Maker- Java with Java.jpg",
       link: '#'
     }
   ]
@@ -81,18 +81,18 @@ export class IndexComponent {
   // handle form submission logic when donation button is clicked
   submitForm() {
 	this.startQRPayment();
-
   }
 
 	startQRPayment() {
 		// check if not empty
 		if (this.donationAmount.length <= 0) {
-			this.updateStatus("Amount is required")
+			this.updateStatus("Amount is required", "red")
 			return
 		}
 
+		this.submitClicked = true;
 		this.postQRPayment()	
-		this.updateStatus("Request sent")
+		this.updateStatus("Request sent", "green")
 	}
 
 	// api call to perform POST
@@ -111,7 +111,7 @@ export class IndexComponent {
 		})
 		.then((response) => {
 			if (response.status != 201) {
-				this.updateStatus("Request failure: " + response.statusText)
+				this.updateStatus("Request failure: " + response.statusText, "red")
 				return
 			}
 			return response.json();
@@ -168,7 +168,7 @@ export class IndexComponent {
 			return response.json();
 		})
 		.then((json) => {
-			this.updateStatus("Payment(identifier: " + this.identifier + ", paymentReference: "+ this.originalPaymentReference + ") " + json.status)
+			this.updateStatus("Payment(identifier: " + this.identifier + ", paymentReference: "+ this.originalPaymentReference + ") " + json.status, "black")
 			if (json.status == "PAID") {
 				this.originalPaymentReference = json["paymentReference"];
 				console.log("In main doing DB")
@@ -179,8 +179,12 @@ export class IndexComponent {
 				this.clear();
 				setTimeout(() => {
 						//this.router.navigateByUrl('/thankyou');
-						this.updateStatus("thanks for donating :)")
+						//this.updateStatus("Thanks for donating :)")
 						this.isDonationInProgress = false;
+						setTimeout(() => {
+							location.reload();
+							this.submitClicked = false;
+						}, 2000)
 					}, 3000)
 			}
 		})
@@ -206,13 +210,14 @@ export class IndexComponent {
 	}
 	
 	// status of the respons
-	updateStatus(status: string) {
+	updateStatus(status: string, statusColor : string) {
 			this.status = status
+			this.statusColor = statusColor
 	}
 	paymentStatusClick() {
 		const id = this.identifier
 		if (!id || id.length <= 0) {
-			this.updateStatus("No payment Id")
+			this.updateStatus("No payment Id", "black")
 			return
 		}
 		this.getPaymentStatus(id)
