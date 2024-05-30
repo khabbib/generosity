@@ -44,6 +44,7 @@ button {
 
 .thankyou-text {
     color: rgb(67, 185, 67) !important;
+    text-align: center;
 }
 
 /* Process is taking */
