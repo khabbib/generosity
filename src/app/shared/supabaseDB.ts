@@ -1,11 +1,12 @@
+import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-
+import { environment } from '../../environments/environment';
 
 interface Payment {
   payment_id: string;
   project_name: string;
   amount: number;
-  payment_date: string; 
+  payment_date: string;
 }
 
 interface DonationData {
@@ -16,31 +17,21 @@ interface DonationData {
   percentageOfDonors: number;
 }
 
+@Injectable({
+  providedIn: 'root'
+})
 class SupabaseService {
-  private supabaseUrl: string;
-  private supabaseKey: string;
-  private static instance: SupabaseService;
 
   public supabase: SupabaseClient;
 
   public constructor() {
-    this.supabaseUrl = 'https://rayjfxcjyuoolsqecrnt.supabase.co';
-    this.supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJheWpmeGNqeXVvb2xzcWVjcm50Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcxNjkxNzA0MSwiZXhwIjoyMDMyNDkzMDQxfQ.YeCD5QZjCCCEXRYPk08YlZ_X0m6wRImJxsUF4Xw62bQ'; // Replace with your Supabase key
-    this.supabase = createClient(this.supabaseUrl, this.supabaseKey);
-  }
-
-  public static getInstance(): SupabaseService {
-    if (!SupabaseService.instance) {
-      SupabaseService.instance = new SupabaseService();
-    }
-    return SupabaseService.instance;
+    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
   }
 
   public getSupabaseClient(): SupabaseClient {
     return this.supabase;
   }
 
-  
   async savePayment(payment_id: string, project_name: string, amount: number, payment_date: Date): Promise<string> {
     try {
       const { data, error } = await this.supabase
@@ -55,7 +46,6 @@ class SupabaseService {
     }
   }
 
-  
   async getAllPayments(): Promise<Payment[]> {
     try {
       const { data, error } = await this.supabase
@@ -70,59 +60,52 @@ class SupabaseService {
     }
   }
 
-
-  async getDonationData(timeFrame: 'week' | 'month' | 'year'): Promise<DonationData[]> {
-    try {
-      const payments = await this.getAllPayments();
-      const filteredPayments = this.filterPaymentsByTimeFrame(payments, timeFrame);
-
-      const projectData = new Map<string, { totalDonations: number; numberOfDonors: Set<string> }>();
-
-      filteredPayments.forEach(payment => {
-        const { project_name, amount } = payment;
-
-        if (!projectData.has(project_name)) {
-          projectData.set(project_name, { totalDonations: 0, numberOfDonors: new Set() });
-        }
-
-        const project = projectData.get(project_name)!;
-        project.totalDonations += amount;
-        project.numberOfDonors.add(payment.payment_id); 
-      });
-
-      const totalFunds = Array.from(projectData.values()).reduce((acc, project) => acc + project.totalDonations, 0);
-      const totalDonors = Array.from(projectData.values()).reduce((acc, project) => acc + project.numberOfDonors.size, 0);
-
-      const donationData: DonationData[] = Array.from(projectData.entries()).map(([project_name, project]) => ({
-        project: project_name,
-        totalDonations: project.totalDonations,
-        numberOfDonors: project.numberOfDonors.size,
-        percentageOfTotalFunds: (project.totalDonations / totalFunds) * 100,
-        percentageOfDonors: (project.numberOfDonors.size / totalDonors) * 100,
-      }));
-
-      return donationData;
-    } catch (error) {
-      console.error('Error aggregating donation data:', error);
-      throw error;
-    }
-  }
-
-  private filterPaymentsByTimeFrame(payments: Payment[], timeFrame: 'week' | 'month' | 'year'): Payment[] {
+  filterPaymentsByTimeFrame(payments: Payment[], timeFrame: 'week' | 'month' | 'year'): DonationData[] {
     const now = new Date();
-    return payments.filter(payment => {
+    const filteredPayments = payments.filter(payment => {
       const paymentDate = new Date(payment.payment_date);
       if (timeFrame === 'week') {
-        const startOfWeek = new Date(now);
-        startOfWeek.setDate(now.getDate() - now.getDay());
-        return paymentDate >= startOfWeek;
+        const oneWeekAgo = new Date(now);
+        oneWeekAgo.setDate(now.getDate() - 7);
+        return paymentDate >= oneWeekAgo && paymentDate <= now;
       } else if (timeFrame === 'month') {
-        return paymentDate.getMonth() === now.getMonth() && paymentDate.getFullYear() === now.getFullYear();
+        const thirtyDaysAgo = new Date(now);
+        thirtyDaysAgo.setDate(now.getDate() - 30);
+        return paymentDate >= thirtyDaysAgo && paymentDate <= now;
       } else if (timeFrame === 'year') {
-        return paymentDate.getFullYear() === now.getFullYear();
+        const oneYearAgo = new Date(now);
+        oneYearAgo.setFullYear(now.getFullYear() - 1);
+        return paymentDate >= oneYearAgo && paymentDate <= now;
       }
       return false;
     });
+
+    const projectGroups = filteredPayments.reduce((acc, payment) => {
+      const projectName = payment.project_name;
+      if (!acc[projectName]) {
+        acc[projectName] = {
+          project: projectName,
+          totalDonations: 0,
+          numberOfDonors: 0,
+          percentageOfTotalFunds: 0,
+          percentageOfDonors: 0
+        };
+      }
+      acc[projectName].totalDonations += payment.amount;
+      acc[projectName].numberOfDonors += 1;
+      return acc;
+    }, {} as { [key: string]: DonationData });
+
+    const donationData = Object.values(projectGroups);
+    const totalFunds = donationData.reduce((acc, project) => acc + project.totalDonations, 0);
+    const totalDonors = donationData.reduce((acc, project) => acc + project.numberOfDonors, 0);
+
+    donationData.forEach(project => {
+      project.percentageOfTotalFunds = totalFunds ? (project.totalDonations / totalFunds) * 100 : 0;
+      project.percentageOfDonors = totalDonors ? (project.numberOfDonors / totalDonors) * 100 : 0;
+    });
+
+    return donationData;
   }
 }
 

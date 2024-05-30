@@ -25,7 +25,7 @@ export class IndexComponent {
 	pollingInterval: any;
 	isDonationInProgress: boolean  = false;
 
-  constructor(private router: Router, private cdr: ChangeDetectorRef) {
+  constructor(private router: Router, private cdr: ChangeDetectorRef, private supabaseService: SupabaseService ) {
     //alert("Note! Index is Donation page.");
 
   }
@@ -171,10 +171,8 @@ export class IndexComponent {
 			this.updateStatus("Payment(identifier: " + this.identifier + ", paymentReference: "+ this.originalPaymentReference + ") " + json.status)
 			if (json.status == "PAID") {
 				this.originalPaymentReference = json["paymentReference"];
-				console.log("In main doing DB")
-				const supabaseService = SupabaseService.getInstance();
 				const currentDate = new Date(); 
-				supabaseService.savePayment(this.originalPaymentReference, this.projectName,Number(this.donationAmount),currentDate)
+				this.supabaseService.savePayment(this.originalPaymentReference, this.projectName, Number(this.donationAmount), currentDate);
 				clearInterval(this.pollingInterval);
 				this.clear();
 				setTimeout(() => {
