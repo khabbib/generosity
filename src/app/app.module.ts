@@ -11,7 +11,6 @@ import { FormsModule } from '@angular/forms';
 import {CoreModule} from './core/core.module';
 import {DashboardComponent} from './dashboard/dashboard.component';
 import {IndexComponent} from './index/index.component';
-import {ThankyouComponent} from './thankyou/thankyou.component';
 import SupabaseService from './shared/supabaseDB';
 
 import {CommonModule} from '@angular/common';
@@ -22,7 +21,6 @@ import { ProjectsComponent } from './projects/projects.component';
     AppComponent,
     DashboardComponent,
     IndexComponent,
-    ThankyouComponent,
     ProjectsComponent,
   ],
   imports: [
