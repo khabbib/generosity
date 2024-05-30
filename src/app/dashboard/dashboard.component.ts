@@ -28,30 +28,32 @@ export class DashboardComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    await this.loadChartData();
+    await this.loadInitialData(); 
     this.createCharts();
   }
 
-  // load charts when page is loaded
-  async loadChartData(): Promise<void> {
-    const localData = localStorage.getItem(`donationsData_${this.currentFrame}`);
-    if (localData) {
-      this.donationsData = JSON.parse(localData);
-    } else {
-      try {
-        this.donationsData = await this.supabaseService.getDonationData(this.currentFrame);
-        localStorage.setItem(`donationsData_${this.currentFrame}`, JSON.stringify(this.donationsData));
-      } catch (error) {
-        console.error('Error loading chart data:', error);
-      }
+  async loadInitialData(): Promise<void> {
+    console.log("Initial load - Clearing local storage and fetching data from DB.");
+    this.clearLocalStorage();
+    try {
+      const allData = await this.supabaseService.getAllPayments();
+      localStorage.setItem('allPaymentsData', JSON.stringify(allData));
+      this.filterAndSetDonationData();
+    } catch (error) {
+      console.error('Error loading initial data:', error);
     }
-    console.log("Loaded donationsData: ", this.donationsData); 
+  }
+
+  filterAndSetDonationData(): void {
+    const allData = JSON.parse(localStorage.getItem('allPaymentsData') || '[]');
+    this.donationsData = this.supabaseService.filterPaymentsByTimeFrame(allData, this.currentFrame);
+    console.log(`Filtered donationsData for ${this.currentFrame}: `, this.donationsData);
     this.updateCharts();
   }
 
-  setTimeFrame(frame: 'week' | 'month' | 'year'): void {
+  async setTimeFrame(frame: 'week' | 'month' | 'year'): Promise<void> {
     this.currentFrame = frame;
-    this.loadChartData(); 
+    this.filterAndSetDonationData(); 
   }
 
   createCharts(): void {
@@ -102,7 +104,6 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  // create charts elements
   createChart(elementId: string, chartType: ChartType, label: string, data: number[], backgroundColor: string[], borderColor: string[], title?: string): Chart {
     const ctx = document.getElementById(elementId) as HTMLCanvasElement;
     return new Chart(ctx, {
@@ -132,16 +133,33 @@ export class DashboardComponent implements OnInit {
   }
 
   updateCharts(): void {
-    console.log("Updating charts with data: ", this.donationsData);
-    this.updateChart(this.barChart1, this.getTotalDonations(), this.getColorArray('backgroundColor'), this.getColorArray('borderColor'));
-    this.updateChart(this.barChart2, this.getNumberOfDonors(), this.getColorArray('backgroundColor'), this.getColorArray('borderColor'));
-    this.updateChart(this.pieChart1, this.getPercentageOfTotalFunds(), this.getColorArray('backgroundColor'), this.getColorArray('borderColor'));
-    this.updateChart(this.pieChart2, this.getPercentageOfDonors(), this.getColorArray('backgroundColor'), this.getColorArray('borderColor'));
+    if (this.barChart1) {
+      this.updateChart(this.barChart1, this.getTotalDonations(), this.getColorArray('backgroundColor'), this.getColorArray('borderColor'));
+    } else {
+      this.createCharts(); 
+    }
+
+    if (this.barChart2) {
+      this.updateChart(this.barChart2, this.getNumberOfDonors(), this.getColorArray('backgroundColor'), this.getColorArray('borderColor'));
+    } else {
+      this.createCharts();
+    }
+
+    if (this.pieChart1) {
+      this.updateChart(this.pieChart1, this.getPercentageOfTotalFunds(), this.getColorArray('backgroundColor'), this.getColorArray('borderColor'));
+    } else {
+      this.createCharts(); 
+    }
+
+    if (this.pieChart2) {
+      this.updateChart(this.pieChart2, this.getPercentageOfDonors(), this.getColorArray('backgroundColor'), this.getColorArray('borderColor'));
+    } else {
+      this.createCharts(); 
+    }
   }
 
   updateChart(chart: Chart | undefined, data: number[], backgroundColor: string[], borderColor: string[]): void {
     if (chart) {
-      console.log("Updating chart with data: ", data); 
       chart.data.labels = this.getLabels();
       chart.data.datasets[0].data = data;
       chart.data.datasets[0].backgroundColor = backgroundColor;
@@ -151,32 +169,23 @@ export class DashboardComponent implements OnInit {
   }
 
   getLabels(): string[] {
-    console.log("Lable: " , this.donationsData.map(data => data.project))
     return this.donationsData.map(data => data.project);
   }
 
   getTotalDonations(): number[] {
-    const totalDonations = this.donationsData.map(data => data.totalDonations);
-    console.log("Total Donations Data: ", totalDonations); 
-    return totalDonations;
+    return this.donationsData.map(data => data.totalDonations);
   }
 
   getNumberOfDonors(): number[] {
-    const numberOfDonors = this.donationsData.map(data => data.numberOfDonors);
-    console.log("Number of Donors Data: ", numberOfDonors);
-    return numberOfDonors;
+    return this.donationsData.map(data => data.numberOfDonors);
   }
 
   getPercentageOfTotalFunds(): number[] {
-    const percentageOfTotalFunds = this.donationsData.map(data => data.percentageOfTotalFunds);
-    console.log("Percentage of Total Funds Data: ", percentageOfTotalFunds); 
-    return percentageOfTotalFunds;
+    return this.donationsData.map(data => data.percentageOfTotalFunds);
   }
 
   getPercentageOfDonors(): number[] {
-    const percentageOfDonors = this.donationsData.map(data => data.percentageOfDonors);
-    console.log("Percentage of Donors Data: ", percentageOfDonors); 
-    return percentageOfDonors;
+    return this.donationsData.map(data => data.percentageOfDonors);
   }
 
   getColorArray(type: 'backgroundColor' | 'borderColor'): string[] {
@@ -187,5 +196,9 @@ export class DashboardComponent implements OnInit {
       'rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)'
     ];
     return type === 'backgroundColor' ? colors : borderColors;
+  }
+
+  clearLocalStorage(): void {
+    localStorage.removeItem('allPaymentsData');
   }
 }
