@@ -1,6 +1,9 @@
 # 1.1 Generosity
 
-Authors: Habib Mohammadi, Sossio Giorgelli, Azam Suleiman
+##Authors:## 
+- Habib Mohammadi
+- Sossio Giorgelli
+- Azam Suleiman
 
 ## <ins>1.2 Project Info (Swedish)</ins>
 
