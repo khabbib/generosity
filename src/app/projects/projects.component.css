@@ -1,25 +1,24 @@
 /* Desktop */
 @media screen and (max-width: 1300px) {
-    .row {
-        width: 100%;
-        margin: auto;
-    }
+  .row {
+    width: 100%;
+    margin: auto;
+  }
 
-    .card {
-        margin: auto !important;
-        width: 100% !important;
-    }
+  .card {
+    margin: auto !important;
+    width: 100% !important;
+  }
 }
 
 /* Tablet */
 @media screen and (max-width: 900px) {
-    /* default */
+  /* default */
 }
 
 /* Mobile */
 @media screen and (max-width: 500px) {
-
-    .row{
-        margin: auto;
-    }
+  .row {
+    margin: auto;
+  }
 }

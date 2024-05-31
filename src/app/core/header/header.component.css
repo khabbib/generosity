@@ -1,25 +1,25 @@
 nav {
-    background-color:#415256 !important;
-    padding: 20px;
+  background-color: #415256 !important;
+  padding: 20px;
 }
 
 a {
-    color: #fff !important;
+  color: #fff !important;
 }
 
 /* Desktop */
 @media screen and (max-width: 1300px) {
-    /* default */
+  /* default */
 }
 
 /* Tablet */
 @media screen and (max-width: 900px) {
-    /* default */
+  /* default */
 }
 
 /* Mobile */
 @media screen and (max-width: 500px) {
-    nav {
-        width: auto !important;
-    }
+  nav {
+    width: auto !important;
+  }
 }

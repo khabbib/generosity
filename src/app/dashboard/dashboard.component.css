@@ -8,10 +8,9 @@
 
 canvas {
   display: block;
-  width: 100% !important; 
+  width: 100% !important;
   height: 100% !important;
 }
-
 
 button {
   width: 80%;
@@ -20,7 +19,6 @@ button {
 section {
   background-color: white;
   border: 3px solid #eee;
-  
 }
 
 h1 {
@@ -29,33 +27,30 @@ h1 {
 
 /* Desktop */
 @media screen and (max-width: 1300px) {
-.chart-container {
-  width: 90%; 
-}
+  .chart-container {
+    width: 90%;
+  }
 }
 
 /* Tablet */
 @media screen and (max-width: 900px) {
-.chart-container { 
-  width: 80%; 
-}
+  .chart-container {
+    width: 80%;
+  }
 
-
-button {
-  margin-top: 12px;
-}
-
-
+  button {
+    margin-top: 12px;
+  }
 }
 
 /* Mobile */
 @media screen and (max-width: 500px) {
-.chart-container {
-  width: 80%;
-}
+  .chart-container {
+    width: 80%;
+  }
 
-button {
-  margin-top: 12px;
-  width: 100%;
-}
+  button {
+    margin-top: 12px;
+    width: 100%;
+  }
 }

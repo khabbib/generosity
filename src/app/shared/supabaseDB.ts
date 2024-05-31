@@ -18,21 +18,28 @@ interface DonationData {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 class SupabaseService {
-
   public supabase: SupabaseClient;
 
   public constructor() {
-    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
+    this.supabase = createClient(
+      environment.supabaseUrl,
+      environment.supabaseKey
+    );
   }
 
   public getSupabaseClient(): SupabaseClient {
     return this.supabase;
   }
 
-  async savePayment(payment_id: string, project_name: string, amount: number, payment_date: Date): Promise<string> {
+  async savePayment(
+    payment_id: string,
+    project_name: string,
+    amount: number,
+    payment_date: Date
+  ): Promise<string> {
     try {
       const { data, error } = await this.supabase
         .from('payments')
@@ -48,9 +55,7 @@ class SupabaseService {
 
   async getAllPayments(): Promise<Payment[]> {
     try {
-      const { data, error } = await this.supabase
-        .from('payments')
-        .select('*');
+      const { data, error } = await this.supabase.from('payments').select('*');
 
       if (error) throw error;
       return data || [];
@@ -60,9 +65,12 @@ class SupabaseService {
     }
   }
 
-  filterPaymentsByTimeFrame(payments: Payment[], timeFrame: 'week' | 'month' | 'year'): DonationData[] {
+  filterPaymentsByTimeFrame(
+    payments: Payment[],
+    timeFrame: 'week' | 'month' | 'year'
+  ): DonationData[] {
     const now = new Date();
-    const filteredPayments = payments.filter(payment => {
+    const filteredPayments = payments.filter((payment) => {
       const paymentDate = new Date(payment.payment_date);
       if (timeFrame === 'week') {
         const oneWeekAgo = new Date(now);
@@ -80,29 +88,42 @@ class SupabaseService {
       return false;
     });
 
-    const projectGroups = filteredPayments.reduce((acc, payment) => {
-      const projectName = payment.project_name;
-      if (!acc[projectName]) {
-        acc[projectName] = {
-          project: projectName,
-          totalDonations: 0,
-          numberOfDonors: 0,
-          percentageOfTotalFunds: 0,
-          percentageOfDonors: 0
-        };
-      }
-      acc[projectName].totalDonations += payment.amount;
-      acc[projectName].numberOfDonors += 1;
-      return acc;
-    }, {} as { [key: string]: DonationData });
+    const projectGroups = filteredPayments.reduce(
+      (acc, payment) => {
+        const projectName = payment.project_name;
+        if (!acc[projectName]) {
+          acc[projectName] = {
+            project: projectName,
+            totalDonations: 0,
+            numberOfDonors: 0,
+            percentageOfTotalFunds: 0,
+            percentageOfDonors: 0,
+          };
+        }
+        acc[projectName].totalDonations += payment.amount;
+        acc[projectName].numberOfDonors += 1;
+        return acc;
+      },
+      {} as { [key: string]: DonationData }
+    );
 
     const donationData = Object.values(projectGroups);
-    const totalFunds = donationData.reduce((acc, project) => acc + project.totalDonations, 0);
-    const totalDonors = donationData.reduce((acc, project) => acc + project.numberOfDonors, 0);
+    const totalFunds = donationData.reduce(
+      (acc, project) => acc + project.totalDonations,
+      0
+    );
+    const totalDonors = donationData.reduce(
+      (acc, project) => acc + project.numberOfDonors,
+      0
+    );
 
-    donationData.forEach(project => {
-      project.percentageOfTotalFunds = totalFunds ? (project.totalDonations / totalFunds) * 100 : 0;
-      project.percentageOfDonors = totalDonors ? (project.numberOfDonors / totalDonors) * 100 : 0;
+    donationData.forEach((project) => {
+      project.percentageOfTotalFunds = totalFunds
+        ? (project.totalDonations / totalFunds) * 100
+        : 0;
+      project.percentageOfDonors = totalDonors
+        ? (project.numberOfDonors / totalDonors) * 100
+        : 0;
     });
 
     return donationData;

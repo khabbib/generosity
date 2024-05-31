@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "format": "prettier --write ."
   },
   "private": true,
   "dependencies": {
@@ -21,6 +22,7 @@
     "@supabase/supabase-js": "^2.43.4",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.3",
+    "prettier": "^3.2.5",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"

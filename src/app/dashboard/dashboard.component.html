@@ -1,42 +1,56 @@
 <section>
-    <h1>Dashboard</h1>
-    <div class=" px-4 row">
-        <div class="col-sm">
-            <button class="btn btn-primary btn-block btn-sm" (click)="setTimeFrame('week')">Week</button>
-        </div>
-        <div class="col-sm">
-            <button class="btn btn-primary btn-block btn-sm" (click)="setTimeFrame('month')">Month</button>
-        </div>
-        <div class="col-sm">
-            <button class="btn btn-primary btn-block btn-sm" (click)="setTimeFrame('year')">Year</button>
-        </div>
+  <h1>Dashboard</h1>
+  <div class="px-4 row">
+    <div class="col-sm">
+      <button
+        class="btn btn-primary btn-block btn-sm"
+        (click)="setTimeFrame('week')"
+      >
+        Week
+      </button>
     </div>
-    
-    <div class="container">
-        <div class="row p-2">
-            <div class="col-md-6">
-                <div class="chart-container">
-                    <canvas id="barChart1"></canvas>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="chart-container">
-                    <canvas id="barChart2"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="chart-container">
-                    <canvas id="pieChart1"></canvas>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="chart-container">
-                    <canvas id="pieChart2"></canvas>
-                </div>
-            </div>
-        </div>
-      
+    <div class="col-sm">
+      <button
+        class="btn btn-primary btn-block btn-sm"
+        (click)="setTimeFrame('month')"
+      >
+        Month
+      </button>
     </div>
+    <div class="col-sm">
+      <button
+        class="btn btn-primary btn-block btn-sm"
+        (click)="setTimeFrame('year')"
+      >
+        Year
+      </button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row p-2">
+      <div class="col-md-6">
+        <div class="chart-container">
+          <canvas id="barChart1"></canvas>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="chart-container">
+          <canvas id="barChart2"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="chart-container">
+          <canvas id="pieChart1"></canvas>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="chart-container">
+          <canvas id="pieChart2"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>

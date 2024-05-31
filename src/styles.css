@@ -1,60 +1,58 @@
 /* You can add global styles to this file, and also import other style files */
 * {
-    width: 92%;
-    margin: auto;
+  width: 92%;
+  margin: auto;
 }
 
 /* Desktop */
 @media screen and (max-width: 1300px) {
-    /* Standard */
+  /* Standard */
 
-    body {
-        /*background-color: rgb(138, 138, 230);*/
-    }
+  body {
+    /*background-color: rgb(138, 138, 230);*/
+  }
 }
 
 /* Tablet */
 @media screen and (max-width: 900px) {
+  body {
+    /*background-color: rgb(126, 79, 79);*/
+  }
 
-    body {
-        /*background-color: rgb(126, 79, 79);*/
-    }
+  * {
+    width: 100%;
+    margin: auto;
+  }
 
-    * {
-        width: 100%;
-        margin: auto;
-    }
+  h1 {
+    margin: 0 auto;
+    text-align: center;
+    margin-bottom: 20px;
+  }
 
-    h1 {
-        margin: 0 auto;
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-    input {
-        width: 90% !important;
-    }
-
+  input {
+    width: 90% !important;
+  }
 }
 
 /* Mobile */
 @media screen and (max-width: 500px) {
-    body {
-        /*background-color: rgb(104, 153, 104) !important;*/
-    }
+  body {
+    /*background-color: rgb(104, 153, 104) !important;*/
+  }
 
-    * {
-        width: 100%;
-        margin: auto;
-    }
+  * {
+    width: 100%;
+    margin: auto;
+  }
 
-    h1 {
-        margin: 0 auto;
-        text-align: center;
-        margin-bottom: 20px;
-    }
+  h1 {
+    margin: 0 auto;
+    text-align: center;
+    margin-bottom: 20px;
+  }
 
-    input {
-        width: 90% !important;
-    }
+  input {
+    width: 90% !important;
+  }
 }

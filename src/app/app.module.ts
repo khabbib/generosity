@@ -5,18 +5,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
 
-
-
 // Routing
-import {CoreModule} from './core/core.module';
-import {DashboardComponent} from './dashboard/dashboard.component';
-import {IndexComponent} from './index/index.component';
-
+import { CoreModule } from './core/core.module';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { IndexComponent } from './index/index.component';
 
 import SupabaseService from './shared/supabaseDB';
 
-
-import {CommonModule} from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ProjectsComponent } from './projects/projects.component';
 
 @NgModule({
@@ -31,8 +27,8 @@ import { ProjectsComponent } from './projects/projects.component';
     BrowserModule,
     AppRoutingModule,
     CoreModule,
-    FormsModule
+    FormsModule,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

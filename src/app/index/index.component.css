@@ -1,76 +1,76 @@
 section {
-    background-color: rgb(255, 255, 255);
-    border: 3px solid #eee;
-    padding: 20px;
+  background-color: rgb(255, 255, 255);
+  border: 3px solid #eee;
+  padding: 20px;
 }
 
 button {
-    width: 100px;
-    margin-top: 20px;
+  width: 100px;
+  margin-top: 20px;
 }
 
 .donationAmountInput {
-    color: lightgreen; /* Change to your desired color */
-    font-weight: bold;
-    outline: none; /* Remove the outline */
+  color: lightgreen; /* Change to your desired color */
+  font-weight: bold;
+  outline: none; /* Remove the outline */
 }
 
 .donationAmountInput:focus {
-    outline-style: 0px !important; /* Ensure no outline on focus */
+  outline-style: 0px !important; /* Ensure no outline on focus */
 }
 
 /* Remove the spinner/arrow buttons in number input */
 .donationAmountInput::-webkit-outer-spin-button,
 .donationAmountInput::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  -webkit-appearance: none;
+  margin: 0;
 }
 
-.donationAmountInput[type=number] {
-    -moz-appearance: textfield; /* Remove the spinner for Firefox */
+.donationAmountInput[type='number'] {
+  -moz-appearance: textfield; /* Remove the spinner for Firefox */
 }
 
 /* Sucess message*/
 .thankyou-content {
-    margin-top: 20px;
-    margin-bottom: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .thankyou-btn {
-    margin-top: 20px;
-    width: 20%;
-    margin: 10px;
+  margin-top: 20px;
+  width: 20%;
+  margin: 10px;
 }
 
 .thankyou-text {
-    color: rgb(67, 185, 67) !important;
-    text-align: center;
+  color: rgb(67, 185, 67) !important;
+  text-align: center;
 }
 
 /* Process is taking */
 .spinner-border {
-    padding: 40px;
-    margin-top: 20px;
-    margin-bottom: 20px;
+  padding: 40px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 /* Project images */
 img {
-    width: 150px;
-    height: 150px;
+  width: 150px;
+  height: 150px;
 }
 
 /* Desktop */
 @media screen and (max-width: 1300px) {
-    /* default */
+  /* default */
 }
 
 /* Tablet */
 @media screen and (max-width: 900px) {
-    /* default */
+  /* default */
 }
 
 /* Mobile */
 @media screen and (max-width: 500px) {
-    /* default */
+  /* default */
 }

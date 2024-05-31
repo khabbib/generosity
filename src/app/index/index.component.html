@@ -18,9 +18,10 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">
-             {{ projectName }}
+            {{ projectName }}
           </h5>
-          <button *ngIf="!submitClicked"
+          <button
+            *ngIf="!submitClicked"
             type="button"
             class="close"
             data-dismiss="modal"
@@ -31,26 +32,37 @@
         </div>
         <div *ngIf="isDonationInProgress" class="modal-body">
           <!-- <form> -->
-            <div class="form-group">
-                <label style="border-bottom: 1px solid lightgray; padding-bottom: 1rem;">{{projectText}}</label>
-              <label style="padding: 1rem 0;" for="donationAmount">Enter the donation amount:</label>
-              <input
-                type="number"
-                class="form-control"
-                id="donationAmount"
-                name="donationAmount"
-                placeholder="Donation amount"
-                [(ngModel)]="donationAmount"
-                min="1"
-              />
-              <h3 *ngIf="donationAmount" style="color: #3333; text-align: center; padding-top: 1rem;"><span style="font-weight: 900; color: lightgreen;">{{donationAmount}} </span> SEK</h3>
-              
-            </div>
+          <div class="form-group">
+            <label
+              style="border-bottom: 1px solid lightgray; padding-bottom: 1rem"
+              >{{ projectText }}</label
+            >
+            <label style="padding: 1rem 0" for="donationAmount"
+              >Enter the donation amount:</label
+            >
+            <input
+              type="number"
+              class="form-control"
+              id="donationAmount"
+              name="donationAmount"
+              placeholder="Donation amount"
+              [(ngModel)]="donationAmount"
+              min="1"
+            />
+            <h3
+              *ngIf="donationAmount"
+              style="color: #3333; text-align: center; padding-top: 1rem"
+            >
+              <span style="font-weight: 900; color: lightgreen"
+                >{{ donationAmount }}
+              </span>
+              SEK
+            </h3>
+          </div>
 
-            
           <!-- </form> -->
 
-          <div class="container" style="padding: 10px;">
+          <div class="container" style="padding: 10px">
             <div *ngIf="qrCodeUrl" class="qr-code">
               <img
                 [src]="qrCodeUrl"
@@ -58,10 +70,10 @@
                 style="width: 300px; height: 300px"
               />
             </div>
-            <p id="Qstatus" [ngStyle]="{'color': statusColor}">{{ status }}</p>
+            <p id="Qstatus" [ngStyle]="{ color: statusColor }">{{ status }}</p>
           </div>
-        
-        </div><!--  modal body -->
+        </div>
+        <!--  modal body -->
 
         <div *ngIf="qrCodeUrl" class="spinner-border" role="status">
           <span class="sr-only"></span>
@@ -79,13 +91,9 @@
           <button type="button" class="btn btn-secondary" data-dismiss="modal">
             Close
           </button>
-          <button
-              type="button"
-              class="btn btn-primary"
-              (click)="submitForm()"
-            >
-              Donate
-            </button>
+          <button type="button" class="btn btn-primary" (click)="submitForm()">
+            Donate
+          </button>
         </div>
       </div>
     </div>
