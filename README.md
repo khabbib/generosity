@@ -51,12 +51,11 @@ Annars, reflektion för hela kursen skulle vi säga att det var en del repetitio
 ## <ins>1.3.1 Guide to Run the Application</ins>
 
 ### 1.3.2 Run Client side
-
-1. Install dependencies: `npm install` <br>
-2. Run the clinet: `ng serve` 
-3. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+1. Navigate to /generosity <br>
+2. Install dependencies: `npm install` <br>
+3. Run the clinet: `npm start`  
 
 ### 1.3.3 Run Server side
-1. Navigate to swish-server <br>
+1. Navigate to generosity/swish-server <br>
 2. Install dependencies: `npm install` <br>
 3. Run the server: `npm start` <br>
