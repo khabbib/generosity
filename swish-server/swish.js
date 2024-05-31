@@ -43,7 +43,7 @@ app.post('/paymentrequests', (req, res) => {
   );
 
   request(options, (error, response, body) => {
-    //logResult(error, response)
+    // logResult(error, response)
     if (!response) {
       res.status(500).send(error);
       return;

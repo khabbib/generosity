@@ -29,7 +29,6 @@ export class IndexComponent {
     private cdr: ChangeDetectorRef,
     private supabaseService: SupabaseService
   ) {
-    //alert("Note! Index is Donation page.");
   }
 
   projects = [
@@ -138,7 +137,6 @@ export class IndexComponent {
                   this.getPaymentStatus(this.identifier);
                 }
               }, 1000);
-              // this.cdr.detectChanges();
               return blob;
             })
             .catch(function (error) {
@@ -186,8 +184,6 @@ export class IndexComponent {
           clearInterval(this.pollingInterval);
           this.clear();
           setTimeout(() => {
-            //this.router.navigateByUrl('/thankyou');
-            //this.updateStatus("Thanks for donating :)")
             this.isDonationInProgress = false;
             setTimeout(() => {
               location.reload();
