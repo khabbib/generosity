@@ -1,6 +1,6 @@
 # 1.1 Generosity
 
-##Authors:## 
+## Authors: 
 - Habib Mohammadi
 - Sossio Giorgelli
 - Azam Suleiman
